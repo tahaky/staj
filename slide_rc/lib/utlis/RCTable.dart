@@ -1,22 +1,36 @@
-import 'dart:math';
-import 'dart:ui';
+// ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-
-import 'data.dart';
 
 class RCTable extends StatelessWidget {
   const RCTable({
     Key? key,
     required this.size,
-    required this.dataList,
+    required this.objectList,
     required this.infoMaxlenght,
+    required this.headerDecoration,
+    required this.infoDecoration,
+    required this.headerWidth,
+    required this.infoWidth,
+    required this.tableRowMargine,
+    required this.infoRowsValueNames,
+    required this.infoTextStyle,
+    required this.headerTextStyle,
   }) : super(key: key);
 
   final Size size;
-  final List<Data> dataList;
+  final List<dynamic> objectList;
   final int infoMaxlenght;
+  final Decoration headerDecoration;
+  final Decoration infoDecoration;
+  final double headerWidth;
+  final double infoWidth;
+  final double tableRowMargine;
+  final TextStyle infoTextStyle;
+  final TextStyle headerTextStyle;
+  final List<dynamic> infoRowsValueNames;
 
+  //final String sure = "sure";
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -26,10 +40,18 @@ class RCTable extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: size.height / infoMaxlenght * 5.5,
-              width: size.width,
-              child: CreatTable(dataList, size),
-            ),
+                height: size.height / infoMaxlenght * 5.5,
+                width: size.width,
+                child: CreateTable(
+                    objectList,
+                    headerDecoration,
+                    infoDecoration,
+                    headerWidth,
+                    infoWidth,
+                    tableRowMargine,
+                    infoTextStyle,
+                    headerTextStyle,
+                    infoRowsValueNames))
           ],
         ),
       ),
@@ -37,7 +59,118 @@ class RCTable extends StatelessWidget {
   }
 }
 
-Container infoContainer(double height, double width, String text,
+CreateTable(
+  List<dynamic> objectList,
+  Decoration headerDecoration,
+  Decoration infoDecoration,
+  double headerWidth,
+  double infoWidth,
+  double margine,
+  TextStyle infoTextStyle,
+  TextStyle headerTextStyle,
+  List<dynamic> infoRowsValueNames,
+) {
+  return ListView.builder(
+    scrollDirection: Axis.horizontal,
+    physics: const BouncingScrollPhysics(),
+    itemCount: objectList.length,
+    itemBuilder: (BuildContext context, int index) {
+      return dataTable(
+          objectList,
+          index,
+          headerDecoration,
+          infoDecoration,
+          headerWidth,
+          infoWidth,
+          margine,
+          headerTextStyle,
+          infoTextStyle,
+          infoRowsValueNames);
+    },
+  );
+}
+
+dataTable(
+    List<dynamic> objectList,
+    int currentindex,
+    Decoration headerDecoration,
+    Decoration infoDecoration,
+    double headerWidth,
+    double infoWidth,
+    double margine,
+    TextStyle headerTextStyle,
+    TextStyle infoTextStyle,
+    List<dynamic> infoRowsValueNames) {
+  return DataTable(
+    headingRowHeight: 50,
+    columns: <DataColumn>[
+      DataColumn(
+          label: Row(
+        children: [
+          HeaderContainer(
+              'Time', headerDecoration, headerWidth, headerTextStyle),
+          HeaderContainer(
+              'Sure', headerDecoration, headerWidth, headerTextStyle),
+          HeaderContainer(
+              'Ates', headerDecoration, headerWidth, headerTextStyle),
+          HeaderContainer(
+              'Nabiz', headerDecoration, headerWidth, headerTextStyle),
+          HeaderContainer(
+              'Tansiyon', headerDecoration, headerWidth, headerTextStyle),
+          HeaderContainer(
+              'Deger1', headerDecoration, headerWidth, headerTextStyle),
+          HeaderContainer(
+              'Deger2', headerDecoration, headerWidth, headerTextStyle),
+        ],
+      ))
+    ],
+    rows: List<DataRow>.generate(
+      objectList.length,
+      (index) {
+        return DataRow(
+          cells: <DataCell>[
+            DataCell(Row(
+              children: [
+                infoContainer(objectList[index].time.toString(), infoDecoration,
+                    infoWidth, infoTextStyle),
+              ],
+            ))
+          ],
+        );
+      },
+    ),
+  );
+}
+
+Container infoContainer(
+    String infoText, Decoration decoration, double width, TextStyle textStyle) {
+  return Container(
+    width: width,
+    decoration: decoration,
+    child: Center(
+      child: Text(
+        infoText,
+        style: textStyle,
+      ),
+    ),
+  );
+}
+
+Container HeaderContainer(
+    String infoText, Decoration decoration, double width, TextStyle textStyle) {
+  return Container(
+    width: width,
+    decoration: decoration,
+    child: Center(
+      child: Text(
+        infoText,
+        style: textStyle,
+      ),
+    ),
+  );
+}
+
+/*Container infoContainer(double height, double width, String text,
     Decoration decoration, BuildContext context, Size size) {
   return Container(
       width: width,
@@ -93,6 +226,25 @@ Container infoContainer(double height, double width, String text,
                             ),
                           )),
                     ),
+                    SizedBox(
+                      width: size.width / 3,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.red)),
+                          onPressed: () {
+                            OnPressedDelete();
+                          },
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.update),
+                                Text("Sil"),
+                              ],
+                            ),
+                          )),
+                    ),
                   ],
                 );
               });
@@ -104,9 +256,9 @@ Container infoContainer(double height, double width, String text,
           ),
         ),
       ));
-}
+}*/
 
-DataTable dataTable(Size size, List<Data> datalist, int index, double margin,
+/*DataTable dataTable(Size size, List<Object> objetList, int index, double margin,
     BuildContext context) {
   return DataTable(
       horizontalMargin: margin,
@@ -117,7 +269,7 @@ DataTable dataTable(Size size, List<Data> datalist, int index, double margin,
         DataColumn(
           label: headerContainer(
             size.width / 3,
-            datalist[index].header,
+            objectList[index].header,
             const BoxDecoration(
                 color: Color(0XFF2B2D42),
                 borderRadius: BorderRadius.only(
@@ -127,7 +279,7 @@ DataTable dataTable(Size size, List<Data> datalist, int index, double margin,
           ),
         ),
       ],
-      rows: List<DataRow>.generate(datalist[index].info.length, (currentIndex) {
+      rows: List<DataRow>.generate(objectList[index].info.length, (currentIndex) {
         return DataRow(
           cells: <DataCell>[
             DataCell(
@@ -136,7 +288,7 @@ DataTable dataTable(Size size, List<Data> datalist, int index, double margin,
                   infoContainer(
                       size.height / 20,
                       size.width / 3,
-                      datalist[index].info[currentIndex].toString(),
+                      objectList[index].info[currentIndex].toString(),
                       const BoxDecoration(
                         color: Color(0XFF8D99AE),
                         borderRadius: BorderRadius.only(
@@ -152,13 +304,13 @@ DataTable dataTable(Size size, List<Data> datalist, int index, double margin,
         );
       }));
 }
-
+*/
 //Button func
 OnPressedDelete() {}
 
 OnPressedUpdate() {}
 
-Container headerContainer(double width, String text, Decoration decoration) {
+/*Container headerContainer(double width, String text, Decoration decoration) {
   return Container(
     width: width,
     decoration: decoration,
@@ -172,22 +324,22 @@ Container headerContainer(double width, String text, Decoration decoration) {
       ),
     ),
   );
-}
+}*/
 
-CreatTable(List<Data> datalist, Size size) {
+/*CreatTable(List<Object> objectList, Size size) {
   return ListView.builder(
     physics: const BouncingScrollPhysics(),
     scrollDirection: Axis.horizontal,
-    itemCount: datalist.length,
+    itemCount: objectList.length,
     itemBuilder: (
       BuildContext context,
       int index,
     ) {
       return Container(
-        height: size.height / datalist.length * 2.7,
+        height: size.height / objectList.length * 2.7,
         //  width: size.width / 2,
-        child: dataTable(size, datalist, index, 2, context),
+        child: dataTable(size, objectList, index, 2, context),
       );
     },
   );
-}
+}*/

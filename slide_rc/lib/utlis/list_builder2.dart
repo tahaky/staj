@@ -15,35 +15,32 @@ class ListBuilder extends StatefulWidget {
 class _ListBuilderState extends State<ListBuilder> {
   @override
   Widget build(BuildContext context) {
-    late List<dynamic> infoList = [
-      'merhaba1',
-      'nasilsiniz2',
-      'tesekurler3',
-      'merhaba1',
-      'nasilsiniz2',
-      'tesekurler3',
-      'nasilsiniz2',
-    ];
-    late List<dynamic> infoList2 = [
-      'merhaba4',
-      'nasilsiniz5',
-      'tesekurler6',
-      'merhaba1',
-      'nasilsiniz2',
-      'tesekurler3',
-      2,
-      "66550",
-      "5955959"
-          "52a3sdas6d"
-    ];
+    Data data1;
+    data1 = Data(
+      time: 5,
+      sure: 15,
+      ates: 38,
+      nabiz: 75,
+      tansiyon: 12,
+      deger1: 1,
+      deger2: 2,
+    );
 
-    late Data data = Data("header1", infoList);
-    late Data data2 = Data("header2", infoList2);
-    late Data data3 = Data("header3", infoList);
-    late Data data4 = Data("header4", infoList);
-    late Data data5 = Data("header5", infoList);
+    Data data2;
+    data2 = Data(
+      time: 5,
+      sure: 15,
+      ates: 38,
+      nabiz: 75,
+      tansiyon: 12,
+      deger1: 1,
+      deger2: 2,
+    );
+    Map<String, dynamic> data = data1.toMap();
 
-    late List<Data> dataList = [data, data2, data3, data4, data5];
+    List<Data> objectList = [data1, data2];
+
+    //Object object = <Object>[];
     Size size = MediaQuery.of(context).size;
     int infoMaxLenght = 0;
     @override
@@ -53,19 +50,36 @@ class _ListBuilderState extends State<ListBuilder> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 42, 56, 182),
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Container(
-            height: size.height / 3,
-            width: size.width / 1.1,
-            child: RCTable(
-              size: size,
-              dataList: dataList,
-              infoMaxlenght: 9,
-            ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: asdasd(size, objectList),
+        ),
+      ),
+    );
+  }
+
+  Padding asdasd(Size size, List<dynamic> objectList) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: SizedBox(
+        height: size.height / 3,
+        width: size.width / 1.1,
+        child: RCTable(
+          size: size,
+          objectList: [objectList],
+          infoMaxlenght: objectList.length,
+          headerDecoration: BoxDecoration(
+            color: Color(0XFF2B2D42),
           ),
+          infoDecoration: BoxDecoration(color: Color(0XFF8D99AE)),
+          headerWidth: 70,
+          infoWidth: 70,
+          tableRowMargine: 15,
+          infoRowsValueNames: [],
+          headerTextStyle: TextStyle(color: Colors.white),
+          infoTextStyle: TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -77,17 +91,4 @@ SizedBox space(Size size, double heigt) {
     height: heigt,
     width: 0,
   );
-}
-
-int getInfoLenght(List<Data> dataList) {
-  int max = dataList[0].info.length;
-  for (int i = 0; i < dataList.length; i++) {
-    for (int j = 0; j < dataList[i].info[j]; j++) {
-      if (dataList[i].info[j] > max) {
-        max = dataList[i].info[j];
-      }
-    }
-  }
-  print(max);
-  return max;
 }
